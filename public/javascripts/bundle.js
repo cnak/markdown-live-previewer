@@ -821,13 +821,42 @@ module.exports = function (opts) {
   return re;
 };
 
-},{"uc.micro/categories/Cc/regex":62,"uc.micro/categories/P/regex":64,"uc.micro/categories/Z/regex":65,"uc.micro/properties/Any/regex":67}],4:[function(require,module,exports){
+},{"uc.micro/categories/Cc/regex":63,"uc.micro/categories/P/regex":65,"uc.micro/categories/Z/regex":66,"uc.micro/properties/Any/regex":68}],4:[function(require,module,exports){
+'use strict';
+
+
+module.exports = function for_inline_plugin(md, ruleName, tokenType, iteartor) {
+
+  function scan(state) {
+    var i, blkIdx, inlineTokens;
+
+    for (blkIdx = state.tokens.length - 1; blkIdx >= 0; blkIdx--) {
+      if (state.tokens[blkIdx].type !== 'inline') {
+        continue;
+      }
+
+      inlineTokens = state.tokens[blkIdx].children;
+
+      for (i = inlineTokens.length - 1; i >= 0; i--) {
+        if (inlineTokens[i].type !== tokenType) {
+          continue;
+        }
+
+        iteartor(inlineTokens, i);
+      }
+    }
+  }
+
+  md.core.ruler.push(ruleName, scan);
+};
+
+},{}],5:[function(require,module,exports){
 'use strict';
 
 
 module.exports = require('./lib/');
 
-},{"./lib/":13}],5:[function(require,module,exports){
+},{"./lib/":14}],6:[function(require,module,exports){
 // HTML5 entities map: { name -> utf16string }
 //
 'use strict';
@@ -835,7 +864,7 @@ module.exports = require('./lib/');
 /*eslint quotes:0*/
 module.exports = require('entities/lib/maps/entities.json');
 
-},{"entities/lib/maps/entities.json":1}],6:[function(require,module,exports){
+},{"entities/lib/maps/entities.json":1}],7:[function(require,module,exports){
 // List of valid html blocks names, accorting to commonmark spec
 // http://jgm.github.io/CommonMark/spec.html#html-blocks
 
@@ -907,7 +936,7 @@ module.exports = [
   'ul'
 ];
 
-},{}],7:[function(require,module,exports){
+},{}],8:[function(require,module,exports){
 // Regexps to match html elements
 
 'use strict';
@@ -937,7 +966,7 @@ var HTML_OPEN_CLOSE_TAG_RE = new RegExp('^(?:' + open_tag + '|' + close_tag + ')
 module.exports.HTML_TAG_RE = HTML_TAG_RE;
 module.exports.HTML_OPEN_CLOSE_TAG_RE = HTML_OPEN_CLOSE_TAG_RE;
 
-},{}],8:[function(require,module,exports){
+},{}],9:[function(require,module,exports){
 // Utilities
 //
 'use strict';
@@ -1256,7 +1285,7 @@ exports.isPunctChar         = isPunctChar;
 exports.escapeRE            = escapeRE;
 exports.normalizeReference  = normalizeReference;
 
-},{"./entities":5,"mdurl":59,"uc.micro":66,"uc.micro/categories/P/regex":64}],9:[function(require,module,exports){
+},{"./entities":6,"mdurl":60,"uc.micro":67,"uc.micro/categories/P/regex":65}],10:[function(require,module,exports){
 // Just a shortcut for bulk export
 'use strict';
 
@@ -1265,7 +1294,7 @@ exports.parseLinkLabel       = require('./parse_link_label');
 exports.parseLinkDestination = require('./parse_link_destination');
 exports.parseLinkTitle       = require('./parse_link_title');
 
-},{"./parse_link_destination":10,"./parse_link_label":11,"./parse_link_title":12}],10:[function(require,module,exports){
+},{"./parse_link_destination":11,"./parse_link_label":12,"./parse_link_title":13}],11:[function(require,module,exports){
 // Parse link destination
 //
 'use strict';
@@ -1349,7 +1378,7 @@ module.exports = function parseLinkDestination(str, pos, max) {
   return result;
 };
 
-},{"../common/utils":8}],11:[function(require,module,exports){
+},{"../common/utils":9}],12:[function(require,module,exports){
 // Parse link label
 //
 // this function assumes that first character ("[") already matches;
@@ -1399,7 +1428,7 @@ module.exports = function parseLinkLabel(state, start, disableNested) {
   return labelEnd;
 };
 
-},{}],12:[function(require,module,exports){
+},{}],13:[function(require,module,exports){
 // Parse link title
 //
 'use strict';
@@ -1456,7 +1485,7 @@ module.exports = function parseLinkTitle(str, pos, max) {
   return result;
 };
 
-},{"../common/utils":8}],13:[function(require,module,exports){
+},{"../common/utils":9}],14:[function(require,module,exports){
 // Main parser class
 
 'use strict';
@@ -2040,7 +2069,7 @@ MarkdownIt.prototype.renderInline = function (src, env) {
 
 module.exports = MarkdownIt;
 
-},{"./common/utils":8,"./helpers":9,"./parser_block":14,"./parser_core":15,"./parser_inline":16,"./presets/commonmark":17,"./presets/default":18,"./presets/zero":19,"./renderer":20,"linkify-it":2,"mdurl":59,"punycode":61}],14:[function(require,module,exports){
+},{"./common/utils":9,"./helpers":10,"./parser_block":15,"./parser_core":16,"./parser_inline":17,"./presets/commonmark":18,"./presets/default":19,"./presets/zero":20,"./renderer":21,"linkify-it":2,"mdurl":60,"punycode":62}],15:[function(require,module,exports){
 /** internal
  * class ParserBlock
  *
@@ -2164,7 +2193,7 @@ ParserBlock.prototype.State = require('./rules_block/state_block');
 
 module.exports = ParserBlock;
 
-},{"./ruler":21,"./rules_block/blockquote":22,"./rules_block/code":23,"./rules_block/fence":24,"./rules_block/heading":25,"./rules_block/hr":26,"./rules_block/html_block":27,"./rules_block/lheading":28,"./rules_block/list":29,"./rules_block/paragraph":30,"./rules_block/reference":31,"./rules_block/state_block":32,"./rules_block/table":33}],15:[function(require,module,exports){
+},{"./ruler":22,"./rules_block/blockquote":23,"./rules_block/code":24,"./rules_block/fence":25,"./rules_block/heading":26,"./rules_block/hr":27,"./rules_block/html_block":28,"./rules_block/lheading":29,"./rules_block/list":30,"./rules_block/paragraph":31,"./rules_block/reference":32,"./rules_block/state_block":33,"./rules_block/table":34}],16:[function(require,module,exports){
 /** internal
  * class Core
  *
@@ -2224,7 +2253,7 @@ Core.prototype.State = require('./rules_core/state_core');
 
 module.exports = Core;
 
-},{"./ruler":21,"./rules_core/block":34,"./rules_core/inline":35,"./rules_core/linkify":36,"./rules_core/normalize":37,"./rules_core/replacements":38,"./rules_core/smartquotes":39,"./rules_core/state_core":40}],16:[function(require,module,exports){
+},{"./ruler":22,"./rules_core/block":35,"./rules_core/inline":36,"./rules_core/linkify":37,"./rules_core/normalize":38,"./rules_core/replacements":39,"./rules_core/smartquotes":40,"./rules_core/state_core":41}],17:[function(require,module,exports){
 /** internal
  * class ParserInline
  *
@@ -2403,7 +2432,7 @@ ParserInline.prototype.State = require('./rules_inline/state_inline');
 
 module.exports = ParserInline;
 
-},{"./ruler":21,"./rules_inline/autolink":41,"./rules_inline/backticks":42,"./rules_inline/balance_pairs":43,"./rules_inline/emphasis":44,"./rules_inline/entity":45,"./rules_inline/escape":46,"./rules_inline/html_inline":47,"./rules_inline/image":48,"./rules_inline/link":49,"./rules_inline/newline":50,"./rules_inline/state_inline":51,"./rules_inline/strikethrough":52,"./rules_inline/text":53,"./rules_inline/text_collapse":54}],17:[function(require,module,exports){
+},{"./ruler":22,"./rules_inline/autolink":42,"./rules_inline/backticks":43,"./rules_inline/balance_pairs":44,"./rules_inline/emphasis":45,"./rules_inline/entity":46,"./rules_inline/escape":47,"./rules_inline/html_inline":48,"./rules_inline/image":49,"./rules_inline/link":50,"./rules_inline/newline":51,"./rules_inline/state_inline":52,"./rules_inline/strikethrough":53,"./rules_inline/text":54,"./rules_inline/text_collapse":55}],18:[function(require,module,exports){
 // Commonmark default options
 
 'use strict';
@@ -2485,7 +2514,7 @@ module.exports = {
   }
 };
 
-},{}],18:[function(require,module,exports){
+},{}],19:[function(require,module,exports){
 // markdown-it default options
 
 'use strict';
@@ -2528,7 +2557,7 @@ module.exports = {
   }
 };
 
-},{}],19:[function(require,module,exports){
+},{}],20:[function(require,module,exports){
 // "Zero" preset, with nothing enabled. Useful for manual configuring of simple
 // modes. For example, to parse bold/italic only.
 
@@ -2592,7 +2621,7 @@ module.exports = {
   }
 };
 
-},{}],20:[function(require,module,exports){
+},{}],21:[function(require,module,exports){
 /**
  * class Renderer
  *
@@ -2935,7 +2964,7 @@ Renderer.prototype.render = function (tokens, options, env) {
 
 module.exports = Renderer;
 
-},{"./common/utils":8}],21:[function(require,module,exports){
+},{"./common/utils":9}],22:[function(require,module,exports){
 /**
  * class Ruler
  *
@@ -3289,7 +3318,7 @@ Ruler.prototype.getRules = function (chainName) {
 
 module.exports = Ruler;
 
-},{}],22:[function(require,module,exports){
+},{}],23:[function(require,module,exports){
 // Block quotes
 
 'use strict';
@@ -3575,7 +3604,7 @@ module.exports = function blockquote(state, startLine, endLine, silent) {
   return true;
 };
 
-},{"../common/utils":8}],23:[function(require,module,exports){
+},{"../common/utils":9}],24:[function(require,module,exports){
 // Code block (4 spaces padded)
 
 'use strict';
@@ -3611,7 +3640,7 @@ module.exports = function code(state, startLine, endLine/*, silent*/) {
   return true;
 };
 
-},{}],24:[function(require,module,exports){
+},{}],25:[function(require,module,exports){
 // fences (``` lang, ~~~ lang)
 
 'use strict';
@@ -3711,7 +3740,7 @@ module.exports = function fence(state, startLine, endLine, silent) {
   return true;
 };
 
-},{}],25:[function(require,module,exports){
+},{}],26:[function(require,module,exports){
 // heading (#, ##, ...)
 
 'use strict';
@@ -3768,7 +3797,7 @@ module.exports = function heading(state, startLine, endLine, silent) {
   return true;
 };
 
-},{"../common/utils":8}],26:[function(require,module,exports){
+},{"../common/utils":9}],27:[function(require,module,exports){
 // Horizontal rule
 
 'use strict';
@@ -3815,7 +3844,7 @@ module.exports = function hr(state, startLine, endLine, silent) {
   return true;
 };
 
-},{"../common/utils":8}],27:[function(require,module,exports){
+},{"../common/utils":9}],28:[function(require,module,exports){
 // HTML block
 
 'use strict';
@@ -3891,7 +3920,7 @@ module.exports = function html_block(state, startLine, endLine, silent) {
   return true;
 };
 
-},{"../common/html_blocks":6,"../common/html_re":7}],28:[function(require,module,exports){
+},{"../common/html_blocks":7,"../common/html_re":8}],29:[function(require,module,exports){
 // lheading (---, ===)
 
 'use strict';
@@ -3976,7 +4005,7 @@ module.exports = function lheading(state, startLine, endLine/*, silent*/) {
   return true;
 };
 
-},{}],29:[function(require,module,exports){
+},{}],30:[function(require,module,exports){
 // Lists
 
 'use strict';
@@ -4338,7 +4367,7 @@ module.exports = function list(state, startLine, endLine, silent) {
   return true;
 };
 
-},{"../common/utils":8}],30:[function(require,module,exports){
+},{"../common/utils":9}],31:[function(require,module,exports){
 // Paragraph
 
 'use strict';
@@ -4392,7 +4421,7 @@ module.exports = function paragraph(state, startLine/*, endLine*/) {
   return true;
 };
 
-},{}],31:[function(require,module,exports){
+},{}],32:[function(require,module,exports){
 'use strict';
 
 
@@ -4592,7 +4621,7 @@ module.exports = function reference(state, startLine, _endLine, silent) {
   return true;
 };
 
-},{"../common/utils":8}],32:[function(require,module,exports){
+},{"../common/utils":9}],33:[function(require,module,exports){
 // Parser state class
 
 'use strict';
@@ -4825,7 +4854,7 @@ StateBlock.prototype.Token = Token;
 
 module.exports = StateBlock;
 
-},{"../common/utils":8,"../token":55}],33:[function(require,module,exports){
+},{"../common/utils":9,"../token":56}],34:[function(require,module,exports){
 // GFM table, https://github.github.com/gfm/#tables-extension-
 
 'use strict';
@@ -5048,7 +5077,7 @@ module.exports = function table(state, startLine, endLine, silent) {
   return true;
 };
 
-},{"../common/utils":8}],34:[function(require,module,exports){
+},{"../common/utils":9}],35:[function(require,module,exports){
 'use strict';
 
 
@@ -5066,7 +5095,7 @@ module.exports = function block(state) {
   }
 };
 
-},{}],35:[function(require,module,exports){
+},{}],36:[function(require,module,exports){
 'use strict';
 
 module.exports = function inline(state) {
@@ -5081,7 +5110,7 @@ module.exports = function inline(state) {
   }
 };
 
-},{}],36:[function(require,module,exports){
+},{}],37:[function(require,module,exports){
 // Replace link-like texts with link nodes.
 //
 // Currently restricted by `md.validateLink()` to http/https/ftp
@@ -5216,7 +5245,7 @@ module.exports = function linkify(state) {
   }
 };
 
-},{"../common/utils":8}],37:[function(require,module,exports){
+},{"../common/utils":9}],38:[function(require,module,exports){
 // Normalize input string
 
 'use strict';
@@ -5239,7 +5268,7 @@ module.exports = function normalize(state) {
   state.src = str;
 };
 
-},{}],38:[function(require,module,exports){
+},{}],39:[function(require,module,exports){
 // Simple typographic replacements
 //
 // (c) (C) → ©
@@ -5348,7 +5377,7 @@ module.exports = function replace(state) {
   }
 };
 
-},{}],39:[function(require,module,exports){
+},{}],40:[function(require,module,exports){
 // Convert straight quotation marks to typographic ones
 //
 'use strict';
@@ -5551,7 +5580,7 @@ module.exports = function smartquotes(state) {
   }
 };
 
-},{"../common/utils":8}],40:[function(require,module,exports){
+},{"../common/utils":9}],41:[function(require,module,exports){
 // Core state object
 //
 'use strict';
@@ -5573,7 +5602,7 @@ StateCore.prototype.Token = Token;
 
 module.exports = StateCore;
 
-},{"../token":55}],41:[function(require,module,exports){
+},{"../token":56}],42:[function(require,module,exports){
 // Process autolinks '<protocol:...>'
 
 'use strict';
@@ -5651,7 +5680,7 @@ module.exports = function autolink(state, silent) {
   return false;
 };
 
-},{}],42:[function(require,module,exports){
+},{}],43:[function(require,module,exports){
 // Parse backticks
 
 'use strict';
@@ -5716,7 +5745,7 @@ module.exports = function backtick(state, silent) {
   return true;
 };
 
-},{}],43:[function(require,module,exports){
+},{}],44:[function(require,module,exports){
 // For each opening emphasis-like marker find a matching closing one
 //
 'use strict';
@@ -5826,7 +5855,7 @@ module.exports = function link_pairs(state) {
   }
 };
 
-},{}],44:[function(require,module,exports){
+},{}],45:[function(require,module,exports){
 // Process *this* and _that_
 //
 'use strict';
@@ -5965,7 +5994,7 @@ module.exports.postProcess = function emphasis(state) {
   }
 };
 
-},{}],45:[function(require,module,exports){
+},{}],46:[function(require,module,exports){
 // Process html entity - &#123;, &#xAF;, &quot;, ...
 
 'use strict';
@@ -6015,7 +6044,7 @@ module.exports = function entity(state, silent) {
   return true;
 };
 
-},{"../common/entities":5,"../common/utils":8}],46:[function(require,module,exports){
+},{"../common/entities":6,"../common/utils":9}],47:[function(require,module,exports){
 // Process escaped chars and hardbreaks
 
 'use strict';
@@ -6069,7 +6098,7 @@ module.exports = function escape(state, silent) {
   return true;
 };
 
-},{"../common/utils":8}],47:[function(require,module,exports){
+},{"../common/utils":9}],48:[function(require,module,exports){
 // Process html tags
 
 'use strict';
@@ -6118,7 +6147,7 @@ module.exports = function html_inline(state, silent) {
   return true;
 };
 
-},{"../common/html_re":7}],48:[function(require,module,exports){
+},{"../common/html_re":8}],49:[function(require,module,exports){
 // Process ![image](<src> "title")
 
 'use strict';
@@ -6272,7 +6301,7 @@ module.exports = function image(state, silent) {
   return true;
 };
 
-},{"../common/utils":8}],49:[function(require,module,exports){
+},{"../common/utils":9}],50:[function(require,module,exports){
 // Process [link](<to> "stuff")
 
 'use strict';
@@ -6422,7 +6451,7 @@ module.exports = function link(state, silent) {
   return true;
 };
 
-},{"../common/utils":8}],50:[function(require,module,exports){
+},{"../common/utils":9}],51:[function(require,module,exports){
 // Proceess '\n'
 
 'use strict';
@@ -6466,7 +6495,7 @@ module.exports = function newline(state, silent) {
   return true;
 };
 
-},{"../common/utils":8}],51:[function(require,module,exports){
+},{"../common/utils":9}],52:[function(require,module,exports){
 // Inline parser state
 
 'use strict';
@@ -6622,7 +6651,7 @@ StateInline.prototype.Token = Token;
 
 module.exports = StateInline;
 
-},{"../common/utils":8,"../token":55}],52:[function(require,module,exports){
+},{"../common/utils":9,"../token":56}],53:[function(require,module,exports){
 // ~~strike through~~
 //
 'use strict';
@@ -6755,7 +6784,7 @@ module.exports.postProcess = function strikethrough(state) {
   }
 };
 
-},{}],53:[function(require,module,exports){
+},{}],54:[function(require,module,exports){
 // Skip text characters for text token, place those to pending buffer
 // and increment current pos
 
@@ -6846,7 +6875,7 @@ module.exports = function text(state, silent) {
   return true;
 };*/
 
-},{}],54:[function(require,module,exports){
+},{}],55:[function(require,module,exports){
 // Clean up tokens after emphasis and strikethrough postprocessing:
 // merge adjacent text nodes into one and re-calculate all token levels
 //
@@ -6889,7 +6918,7 @@ module.exports = function text_collapse(state) {
   }
 };
 
-},{}],55:[function(require,module,exports){
+},{}],56:[function(require,module,exports){
 // Token class
 
 'use strict';
@@ -7091,7 +7120,7 @@ Token.prototype.attrJoin = function attrJoin(name, value) {
 
 module.exports = Token;
 
-},{}],56:[function(require,module,exports){
+},{}],57:[function(require,module,exports){
 
 'use strict';
 
@@ -7215,7 +7244,7 @@ decode.componentChars = '';
 
 module.exports = decode;
 
-},{}],57:[function(require,module,exports){
+},{}],58:[function(require,module,exports){
 
 'use strict';
 
@@ -7315,7 +7344,7 @@ encode.componentChars = "-_.!~*'()";
 
 module.exports = encode;
 
-},{}],58:[function(require,module,exports){
+},{}],59:[function(require,module,exports){
 
 'use strict';
 
@@ -7342,7 +7371,7 @@ module.exports = function format(url) {
   return result;
 };
 
-},{}],59:[function(require,module,exports){
+},{}],60:[function(require,module,exports){
 'use strict';
 
 
@@ -7351,7 +7380,7 @@ module.exports.decode = require('./decode');
 module.exports.format = require('./format');
 module.exports.parse  = require('./parse');
 
-},{"./decode":56,"./encode":57,"./format":58,"./parse":60}],60:[function(require,module,exports){
+},{"./decode":57,"./encode":58,"./format":59,"./parse":61}],61:[function(require,module,exports){
 // Copyright Joyent, Inc. and other Node contributors.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a
@@ -7665,7 +7694,7 @@ Url.prototype.parseHost = function(host) {
 
 module.exports = urlParse;
 
-},{}],61:[function(require,module,exports){
+},{}],62:[function(require,module,exports){
 (function (global){(function (){
 /*! https://mths.be/punycode v1.4.1 by @mathias */
 ;(function(root) {
@@ -8202,15 +8231,15 @@ module.exports = urlParse;
 }(this));
 
 }).call(this)}).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],62:[function(require,module,exports){
-module.exports=/[\0-\x1F\x7F-\x9F]/
 },{}],63:[function(require,module,exports){
-module.exports=/[\xAD\u0600-\u0605\u061C\u06DD\u070F\u08E2\u180E\u200B-\u200F\u202A-\u202E\u2060-\u2064\u2066-\u206F\uFEFF\uFFF9-\uFFFB]|\uD804[\uDCBD\uDCCD]|\uD82F[\uDCA0-\uDCA3]|\uD834[\uDD73-\uDD7A]|\uDB40[\uDC01\uDC20-\uDC7F]/
+module.exports=/[\0-\x1F\x7F-\x9F]/
 },{}],64:[function(require,module,exports){
-module.exports=/[!-#%-\*,-\/:;\?@\[-\]_\{\}\xA1\xA7\xAB\xB6\xB7\xBB\xBF\u037E\u0387\u055A-\u055F\u0589\u058A\u05BE\u05C0\u05C3\u05C6\u05F3\u05F4\u0609\u060A\u060C\u060D\u061B\u061E\u061F\u066A-\u066D\u06D4\u0700-\u070D\u07F7-\u07F9\u0830-\u083E\u085E\u0964\u0965\u0970\u09FD\u0A76\u0AF0\u0C84\u0DF4\u0E4F\u0E5A\u0E5B\u0F04-\u0F12\u0F14\u0F3A-\u0F3D\u0F85\u0FD0-\u0FD4\u0FD9\u0FDA\u104A-\u104F\u10FB\u1360-\u1368\u1400\u166D\u166E\u169B\u169C\u16EB-\u16ED\u1735\u1736\u17D4-\u17D6\u17D8-\u17DA\u1800-\u180A\u1944\u1945\u1A1E\u1A1F\u1AA0-\u1AA6\u1AA8-\u1AAD\u1B5A-\u1B60\u1BFC-\u1BFF\u1C3B-\u1C3F\u1C7E\u1C7F\u1CC0-\u1CC7\u1CD3\u2010-\u2027\u2030-\u2043\u2045-\u2051\u2053-\u205E\u207D\u207E\u208D\u208E\u2308-\u230B\u2329\u232A\u2768-\u2775\u27C5\u27C6\u27E6-\u27EF\u2983-\u2998\u29D8-\u29DB\u29FC\u29FD\u2CF9-\u2CFC\u2CFE\u2CFF\u2D70\u2E00-\u2E2E\u2E30-\u2E4E\u3001-\u3003\u3008-\u3011\u3014-\u301F\u3030\u303D\u30A0\u30FB\uA4FE\uA4FF\uA60D-\uA60F\uA673\uA67E\uA6F2-\uA6F7\uA874-\uA877\uA8CE\uA8CF\uA8F8-\uA8FA\uA8FC\uA92E\uA92F\uA95F\uA9C1-\uA9CD\uA9DE\uA9DF\uAA5C-\uAA5F\uAADE\uAADF\uAAF0\uAAF1\uABEB\uFD3E\uFD3F\uFE10-\uFE19\uFE30-\uFE52\uFE54-\uFE61\uFE63\uFE68\uFE6A\uFE6B\uFF01-\uFF03\uFF05-\uFF0A\uFF0C-\uFF0F\uFF1A\uFF1B\uFF1F\uFF20\uFF3B-\uFF3D\uFF3F\uFF5B\uFF5D\uFF5F-\uFF65]|\uD800[\uDD00-\uDD02\uDF9F\uDFD0]|\uD801\uDD6F|\uD802[\uDC57\uDD1F\uDD3F\uDE50-\uDE58\uDE7F\uDEF0-\uDEF6\uDF39-\uDF3F\uDF99-\uDF9C]|\uD803[\uDF55-\uDF59]|\uD804[\uDC47-\uDC4D\uDCBB\uDCBC\uDCBE-\uDCC1\uDD40-\uDD43\uDD74\uDD75\uDDC5-\uDDC8\uDDCD\uDDDB\uDDDD-\uDDDF\uDE38-\uDE3D\uDEA9]|\uD805[\uDC4B-\uDC4F\uDC5B\uDC5D\uDCC6\uDDC1-\uDDD7\uDE41-\uDE43\uDE60-\uDE6C\uDF3C-\uDF3E]|\uD806[\uDC3B\uDE3F-\uDE46\uDE9A-\uDE9C\uDE9E-\uDEA2]|\uD807[\uDC41-\uDC45\uDC70\uDC71\uDEF7\uDEF8]|\uD809[\uDC70-\uDC74]|\uD81A[\uDE6E\uDE6F\uDEF5\uDF37-\uDF3B\uDF44]|\uD81B[\uDE97-\uDE9A]|\uD82F\uDC9F|\uD836[\uDE87-\uDE8B]|\uD83A[\uDD5E\uDD5F]/
+module.exports=/[\xAD\u0600-\u0605\u061C\u06DD\u070F\u08E2\u180E\u200B-\u200F\u202A-\u202E\u2060-\u2064\u2066-\u206F\uFEFF\uFFF9-\uFFFB]|\uD804[\uDCBD\uDCCD]|\uD82F[\uDCA0-\uDCA3]|\uD834[\uDD73-\uDD7A]|\uDB40[\uDC01\uDC20-\uDC7F]/
 },{}],65:[function(require,module,exports){
-module.exports=/[ \xA0\u1680\u2000-\u200A\u2028\u2029\u202F\u205F\u3000]/
+module.exports=/[!-#%-\*,-\/:;\?@\[-\]_\{\}\xA1\xA7\xAB\xB6\xB7\xBB\xBF\u037E\u0387\u055A-\u055F\u0589\u058A\u05BE\u05C0\u05C3\u05C6\u05F3\u05F4\u0609\u060A\u060C\u060D\u061B\u061E\u061F\u066A-\u066D\u06D4\u0700-\u070D\u07F7-\u07F9\u0830-\u083E\u085E\u0964\u0965\u0970\u09FD\u0A76\u0AF0\u0C84\u0DF4\u0E4F\u0E5A\u0E5B\u0F04-\u0F12\u0F14\u0F3A-\u0F3D\u0F85\u0FD0-\u0FD4\u0FD9\u0FDA\u104A-\u104F\u10FB\u1360-\u1368\u1400\u166D\u166E\u169B\u169C\u16EB-\u16ED\u1735\u1736\u17D4-\u17D6\u17D8-\u17DA\u1800-\u180A\u1944\u1945\u1A1E\u1A1F\u1AA0-\u1AA6\u1AA8-\u1AAD\u1B5A-\u1B60\u1BFC-\u1BFF\u1C3B-\u1C3F\u1C7E\u1C7F\u1CC0-\u1CC7\u1CD3\u2010-\u2027\u2030-\u2043\u2045-\u2051\u2053-\u205E\u207D\u207E\u208D\u208E\u2308-\u230B\u2329\u232A\u2768-\u2775\u27C5\u27C6\u27E6-\u27EF\u2983-\u2998\u29D8-\u29DB\u29FC\u29FD\u2CF9-\u2CFC\u2CFE\u2CFF\u2D70\u2E00-\u2E2E\u2E30-\u2E4E\u3001-\u3003\u3008-\u3011\u3014-\u301F\u3030\u303D\u30A0\u30FB\uA4FE\uA4FF\uA60D-\uA60F\uA673\uA67E\uA6F2-\uA6F7\uA874-\uA877\uA8CE\uA8CF\uA8F8-\uA8FA\uA8FC\uA92E\uA92F\uA95F\uA9C1-\uA9CD\uA9DE\uA9DF\uAA5C-\uAA5F\uAADE\uAADF\uAAF0\uAAF1\uABEB\uFD3E\uFD3F\uFE10-\uFE19\uFE30-\uFE52\uFE54-\uFE61\uFE63\uFE68\uFE6A\uFE6B\uFF01-\uFF03\uFF05-\uFF0A\uFF0C-\uFF0F\uFF1A\uFF1B\uFF1F\uFF20\uFF3B-\uFF3D\uFF3F\uFF5B\uFF5D\uFF5F-\uFF65]|\uD800[\uDD00-\uDD02\uDF9F\uDFD0]|\uD801\uDD6F|\uD802[\uDC57\uDD1F\uDD3F\uDE50-\uDE58\uDE7F\uDEF0-\uDEF6\uDF39-\uDF3F\uDF99-\uDF9C]|\uD803[\uDF55-\uDF59]|\uD804[\uDC47-\uDC4D\uDCBB\uDCBC\uDCBE-\uDCC1\uDD40-\uDD43\uDD74\uDD75\uDDC5-\uDDC8\uDDCD\uDDDB\uDDDD-\uDDDF\uDE38-\uDE3D\uDEA9]|\uD805[\uDC4B-\uDC4F\uDC5B\uDC5D\uDCC6\uDDC1-\uDDD7\uDE41-\uDE43\uDE60-\uDE6C\uDF3C-\uDF3E]|\uD806[\uDC3B\uDE3F-\uDE46\uDE9A-\uDE9C\uDE9E-\uDEA2]|\uD807[\uDC41-\uDC45\uDC70\uDC71\uDEF7\uDEF8]|\uD809[\uDC70-\uDC74]|\uD81A[\uDE6E\uDE6F\uDEF5\uDF37-\uDF3B\uDF44]|\uD81B[\uDE97-\uDE9A]|\uD82F\uDC9F|\uD836[\uDE87-\uDE8B]|\uD83A[\uDD5E\uDD5F]/
 },{}],66:[function(require,module,exports){
+module.exports=/[ \xA0\u1680\u2000-\u200A\u2028\u2029\u202F\u205F\u3000]/
+},{}],67:[function(require,module,exports){
 'use strict';
 
 exports.Any = require('./properties/Any/regex');
@@ -8219,19 +8248,23 @@ exports.Cf  = require('./categories/Cf/regex');
 exports.P   = require('./categories/P/regex');
 exports.Z   = require('./categories/Z/regex');
 
-},{"./categories/Cc/regex":62,"./categories/Cf/regex":63,"./categories/P/regex":64,"./categories/Z/regex":65,"./properties/Any/regex":67}],67:[function(require,module,exports){
+},{"./categories/Cc/regex":63,"./categories/Cf/regex":64,"./categories/P/regex":65,"./categories/Z/regex":66,"./properties/Any/regex":68}],68:[function(require,module,exports){
 module.exports=/[\0-\uD7FF\uE000-\uFFFF]|[\uD800-\uDBFF][\uDC00-\uDFFF]|[\uD800-\uDBFF](?![\uDC00-\uDFFF])|(?:[^\uD800-\uDBFF]|^)[\uDC00-\uDFFF]/
-},{}],68:[function(require,module,exports){
-var MarkdownIt = require("markdown-it"),
-md = new MarkdownIt();
+},{}],69:[function(require,module,exports){
+var iterator = require("markdown-it-for-inline");
+const md = require("markdown-it")({ linkify: true })
+ .use(iterator, 'url_new_win', 'link_open', function (tokens, idx) {
+              tokens[idx].attrPush([ 'target', '_blank' ]);
+            });
 
-document.getElementById("writerView").addEventListener("keypress", function(e) {
+document
+  .getElementById("writerView")
+  .addEventListener("keypress", function (e) {
     let value = document.getElementById("writerView").value;
-    if(e.key === 'Enter') {
-        document.getElementById("readerView").innerText = md.render(value);
-        console.log('enter was pressed');
+    if (e.key === "Enter") {
+      document.getElementById("readerView").innerText = md.render(value);
+      console.log("enter was pressed");
     }
-});
+  });
 
-
-},{"markdown-it":4}]},{},[68]);
+},{"markdown-it":5,"markdown-it-for-inline":4}]},{},[69]);
