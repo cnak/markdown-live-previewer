@@ -1,0 +1,23 @@
+{
+  "name": "markdown-previewer",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "start": "node ./bin/www",
+    "dev": "browserify public/javascripts/index.js -o public/javascripts/bundle.js && nodemon ./bin/www"
+  },
+  "dependencies": {
+    "browserify": "^17.0.0",
+    "cookie-parser": "~1.4.4",
+    "debug": "~2.6.9",
+    "express": "~4.16.1",
+    "http-errors": "~1.6.3",
+    "morgan": "~1.9.1",
+    "nunjucks": "^3.2.3"
+  },
+  "devDependencies": {
+    "browserify-middleware": "^8.1.1",
+    "markdown-it": "^12.0.6",
+    "nodemon": "^2.0.7"
+  }
+}
