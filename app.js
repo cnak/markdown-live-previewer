@@ -19,8 +19,7 @@ nunjucks.configure("views", {
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'html');
 
-app.get("./public/javascripts/index.js", browserify("./public/javascripts/bundle.js"));
-
+app.get(__dirname + "/bundle.js", browserify(__dirname + "/public/javascripts/index.js"));
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
